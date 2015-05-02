@@ -4,29 +4,27 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import fr.jeromeduban.getstoreicon.LoadImage;
-import fr.jeromeduban.getstoreicon.TaskCompleteBitmap;
+import fr.jeromeduban.getstoreicon.Manager;
 
-public class MainActivity extends Activity implements TaskCompleteBitmap {
+public class MainActivity extends Activity {
 	
 	
 	public TextView txt;
+	public ImageView image;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		txt = (TextView)findViewById(R.id.tv);		
-		LoadImage l = new LoadImage();
-		l.execute(this);
-		
-	}
 
-	@Override
-	public void onTaskCompleteBitmap(String src, ImageView icon) {
-		Toast.makeText(this, src, Toast.LENGTH_SHORT).show();
+		image = (ImageView) findViewById(R.id.image);
+
+		txt = (TextView)findViewById(R.id.tv);		
+
+		Manager m = new Manager();
+
+		m.download(image,"com.facebook.katana");
+
 	}
 }
