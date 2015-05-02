@@ -1,6 +1,8 @@
 package fr.jeromeduban.getstoreicon;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -23,55 +26,86 @@ import android.widget.ImageView;
 
 public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 
+	private final Context c;
 	private ImageView image;
+	private Parameter param;
 
-	public LoadImage(ImageView image) {
+	public LoadImage(Context c, ImageView image, Parameter param) {
+		this.c = c;
 		this.image = image;
+		this.param = param;
 	}
 
 	@Override
 	protected Bitmap doInBackground(String... params) {
-		StringBuilder response = new StringBuilder();
 
-		//TODO : check parameter
+		File f = new File(c.getCacheDir(),params[0]);
+		if (!f.exists()){
+			StringBuilder response = new StringBuilder();
 
-		// GET file from server
-		DefaultHttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet("https://play.google.com/store/apps/details?id=" + params[0]);
-		HttpResponse execute;
-		InputStream content;
-		try {
-			execute = client.execute(httpGet);
-			content = execute.getEntity().getContent();
-			BufferedReader buffer = new BufferedReader(
-					new InputStreamReader(content));
-			String s;
-			while ((s = buffer.readLine()) != null) {
-				response.append(s);
-				response.append("\n");
+			//TODO : check parameter not null
+
+			// GET play store HTML
+			DefaultHttpClient client = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet("https://play.google.com/store/apps/details?id=" + params[0]);
+			HttpResponse execute;
+			InputStream content;
+			try {
+				execute = client.execute(httpGet);
+				content = execute.getEntity().getContent();
+				BufferedReader buffer = new BufferedReader(
+						new InputStreamReader(content));
+				String s;
+				while ((s = buffer.readLine()) != null) {
+					response.append(s);
+					response.append("\n");
+				}
+			} catch (Exception e) {
+				System.out.println(e);
 			}
-		} catch (Exception e) {
-			System.out.println(e);
+
+			// Parse html to get the image url
+			Document doc = Jsoup.parse(response.toString());
+			Elements elt = doc.getElementsByClass("cover-container");
+			Element img = elt.select("img").first();
+			String url = img.absUrl("src");
+
+
+			// Sizee selection
+			if (param != null )
+				url = url.replace("w300","w"+Integer.toString(param.getSize()));
+
+
+			try {
+				// Download image from URL
+				HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+				connection.connect();
+				InputStream input = connection.getInputStream();
+
+				Bitmap b = BitmapFactory.decodeStream(input);
+
+				if (param != null && param.getCache()){
+					// Save file to cache
+					FileOutputStream fOut = new FileOutputStream(f);
+					b.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+					fOut.flush();
+					fOut.close();
+				}
+
+				return b;
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else{
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+			return BitmapFactory.decodeFile(f.getAbsolutePath(), options);
 		}
 
-		Document doc = Jsoup.parse(response.toString());
-		Elements elt = doc.getElementsByClass("cover-container");
-		Element img = elt.select("img").first();
-		String src = img.absUrl("src");
-
-
-		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(src).openConnection();
-			connection.connect();
-			InputStream input = connection.getInputStream();
-			Bitmap d = BitmapFactory.decodeStream(input);
-
-			return d;
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return  null;
 	}
 	
 	@Override
