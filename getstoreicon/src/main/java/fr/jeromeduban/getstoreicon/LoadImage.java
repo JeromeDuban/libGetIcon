@@ -29,21 +29,26 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 	private final Context c;
 	private ImageView image;
 	private Parameter param;
+	private String packageName;
+	private OnBitmapLoaded callback;
 
-	public LoadImage(Context c, ImageView image, Parameter param) {
+	public LoadImage(Context c, OnBitmapLoaded callback, ImageView image, Parameter param) {
 		this.c = c;
 		this.image = image;
 		this.param = param;
+		this.callback = callback;
 	}
 
 	@Override
 	protected Bitmap doInBackground(String... params) {
 
+
+		// TODO : check params[0] exists
 		File f = new File(c.getCacheDir(),params[0]);
+		packageName = params[0];
+
 		if (!f.exists()){
 			StringBuilder response = new StringBuilder();
-
-			//TODO : check parameter not null
 
 			// GET play store HTML
 			DefaultHttpClient client = new DefaultHttpClient();
@@ -111,10 +116,23 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 	@Override
 	protected void onPostExecute(Bitmap result) {
 
+		// Set Image
 		if (result != null){
 			image.setImageBitmap(result);
 		}
 
+		// Send result to manager
+		if (callback != null)
+			callback.onBitmapLoaded(this, result,packageName);
+
+	}
+
+	public ImageView getImageView(){
+		return image;
+	}
+
+	public String getPackageName(){
+		return packageName;
 	}
 }
 

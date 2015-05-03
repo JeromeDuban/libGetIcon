@@ -1,9 +1,14 @@
 package fr.jeromeduban.libgeticon;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
 
 import fr.jeromeduban.getstoreicon.Manager;
 import fr.jeromeduban.getstoreicon.Parameter;
@@ -18,7 +23,9 @@ public class MainActivity extends Activity {
 	public ImageView image4;
 	public ImageView image5;
 	public ImageView image6;
-	
+
+	private Manager m;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,9 +40,13 @@ public class MainActivity extends Activity {
 
 		txt = (TextView)findViewById(R.id.tv);
 
-		Parameter param = new Parameter().setCache(true).setSize(100);
 
-		Manager m = new Manager(this, param);
+
+
+		Parameter param = new Parameter().setCache(true).setSize(100);
+		m = new Manager(this, param);
+
+		m.deleteCache(this); //FIXME : to be removed
 
 		m.download(image1,"com.facebook.katana");
 		m.download(image2,"com.netmarble.mherosgb");
@@ -44,5 +55,14 @@ public class MainActivity extends Activity {
 		m.download(image5,"com.ustwo.monumentvalley");
 		m.download(image6,"com.facebook.katana");
 
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		if (m != null)
+			m.cancel();
 	}
 }
