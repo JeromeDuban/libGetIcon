@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.http.HttpResponse;
@@ -50,16 +51,24 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 		if (!f.exists()){
 			StringBuilder response = new StringBuilder();
 
-			// GET play store HTML
-			DefaultHttpClient client = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet("https://play.google.com/store/apps/details?id=" + params[0]);
-			HttpResponse execute;
-			InputStream content;
+			String storeUrl = "https://play.google.com/store/apps/details?id=" + params[0];
+
+
+
 			try {
+				// GET play store HTML
+				DefaultHttpClient client = new DefaultHttpClient();
+				HttpGet httpGet = new HttpGet("https://play.google.com/store/apps/details?id=" + params[0]);
+				HttpResponse execute;
+				InputStream content;
+
 				execute = client.execute(httpGet);
 
-				if (execute.getStatusLine().getStatusCode() != 200)
+				if (execute.getStatusLine().getStatusCode() != 200){
+					Log.d("LibGetIcon","Response code != 200");
 					return null;
+				}
+
 
 				content = execute.getEntity().getContent();
 				BufferedReader buffer = new BufferedReader(
@@ -70,7 +79,8 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 					response.append("\n");
 				}
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
+				return null;
 			}
 
 			// Parse html to get the image url

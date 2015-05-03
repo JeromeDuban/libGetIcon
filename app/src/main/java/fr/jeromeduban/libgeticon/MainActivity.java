@@ -42,19 +42,16 @@ public class MainActivity extends Activity {
 		txt = (TextView)findViewById(R.id.tv);
 
 		Drawable defaultIcon = this.getResources().getDrawable(R.drawable.ic_launcher);
+		// OR
+		defaultIcon = this.getResources().getDrawable(R.mipmap.ic_launcher2);
 
 		Parameter param = new Parameter().setCache(true).setSize(100).setDefaultIcon(defaultIcon);
 
 		m = new Manager(this, param);
 
+		//m.deleteCache(this); //FIXME : to be removed
 
-
-		m.deleteCache(this); //FIXME : to be removed
-
-		m.download(image1, "com.facebook.katana");
-
-		m.setParameter(param.setSize(50));
-
+		m.download(image1, "com.facebo  &=1ok.%20");
 		m.download(image2,"com.netmarble.mherosg");
 		m.download(image3,"com.netmarble.mherosgb");
 		m.download(image4,"com.facebook.katana");
