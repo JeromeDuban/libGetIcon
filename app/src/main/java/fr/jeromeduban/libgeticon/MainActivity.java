@@ -3,6 +3,7 @@ package fr.jeromeduban.libgeticon;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,10 +41,9 @@ public class MainActivity extends Activity {
 
 		txt = (TextView)findViewById(R.id.tv);
 
+		Drawable defaultIcon = this.getResources().getDrawable(R.drawable.ic_launcher);
 
-
-
-		Parameter param = new Parameter().setCache(true).setSize(100);
+		Parameter param = new Parameter().setCache(true).setSize(100).setDefaultIcon(defaultIcon);
 
 		m = new Manager(this, param);
 
@@ -51,11 +51,11 @@ public class MainActivity extends Activity {
 
 		m.deleteCache(this); //FIXME : to be removed
 
-		m.download(image1,"com.facebook.katana");
+		m.download(image1, "com.facebook.katana");
 
 		m.setParameter(param.setSize(50));
-		
-		m.download(image2,"com.netmarble.mherosgb");
+
+		m.download(image2,"com.netmarble.mherosg");
 		m.download(image3,"com.netmarble.mherosgb");
 		m.download(image4,"com.facebook.katana");
 		m.download(image5,"com.ustwo.monumentvalley");

@@ -2,6 +2,7 @@ package fr.jeromeduban.getstoreicon;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -49,8 +50,9 @@ public class Manager implements OnBitmapLoaded{
     }
 
     @Override
-    public void onBitmapLoaded(LoadImage task,Bitmap b, String packageName) {
+    public void onBitmapLoaded(LoadImage task, Bitmap b, String packageName) {
 //        Toast.makeText(c, "Bitmap Loaded " + packageName, Toast.LENGTH_SHORT).show();
+
 
         int index = listTask.indexOf(task);
 
@@ -60,16 +62,17 @@ public class Manager implements OnBitmapLoaded{
             listPackage.remove(index);
             listImage.remove(index);
         }
+        if (b != null){
+            // Looks if bitmap can be used by another task
+            for (int i = 0; i < listTask.size(); i++){
+                if (listPackage.get(i).equals(packageName)){
+                    listTask.get(i).cancel(true);
+                    listImage.get(i).setImageBitmap(b);
 
-        // Looks if bitmap can be used by another task
-        for (int i = 0; i < listTask.size(); i++){
-            if (listPackage.get(i).equals(packageName)){
-                listTask.get(i).cancel(true);
-                listImage.get(i).setImageBitmap(b);
-
-                listTask.remove(i);
-                listPackage.remove(i);
-                listImage.remove(i);
+                    listTask.remove(i);
+                    listPackage.remove(i);
+                    listImage.remove(i);
+                }
             }
         }
     }

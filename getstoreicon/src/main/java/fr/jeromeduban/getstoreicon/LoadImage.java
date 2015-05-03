@@ -57,6 +57,10 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 			InputStream content;
 			try {
 				execute = client.execute(httpGet);
+
+				if (execute.getStatusLine().getStatusCode() != 200)
+					return null;
+
 				content = execute.getEntity().getContent();
 				BufferedReader buffer = new BufferedReader(
 						new InputStreamReader(content));
@@ -89,7 +93,7 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 
 				Bitmap b = BitmapFactory.decodeStream(input);
 
-				if (param != null && param.getCache()){
+				if (param != null && param.getCache() && b!=null){
 					// Save file to cache
 					FileOutputStream fOut = new FileOutputStream(f);
 					b.compress(Bitmap.CompressFormat.PNG, 85, fOut);
@@ -120,10 +124,12 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 		if (result != null){
 			image.setImageBitmap(result);
 		}
+		else if (param != null && param.getDefaultIcon() != null)
+			image.setImageDrawable(param.getDefaultIcon());
 
 		// Send result to manager
 		if (callback != null)
-			callback.onBitmapLoaded(this, result,packageName);
+			callback.onBitmapLoaded(this, result, packageName);
 
 	}
 
