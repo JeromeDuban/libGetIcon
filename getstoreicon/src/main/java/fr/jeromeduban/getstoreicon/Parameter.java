@@ -5,11 +5,16 @@ package fr.jeromeduban.getstoreicon;
  */
 public class Parameter {
 
-    private boolean cache;
+    private boolean cache = false;
     private int size = 300;
 
     public Parameter(){
 
+    }
+
+    public Parameter(Parameter param) {
+        this.size = param.getSize();
+        this.cache = param.getCache();
     }
 
     public Parameter setSize(int size){

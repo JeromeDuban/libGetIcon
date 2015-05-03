@@ -35,7 +35,8 @@ public class Manager implements OnBitmapLoaded{
     }
 
     public void download(ImageView image, String packageName){
-        LoadImage l = new LoadImage(c,this,image, param);
+
+        LoadImage l = new LoadImage(c,this,image, new Parameter(param));
         l.execute(packageName);
 
         listTask.add(l);
@@ -49,7 +50,7 @@ public class Manager implements OnBitmapLoaded{
 
     @Override
     public void onBitmapLoaded(LoadImage task,Bitmap b, String packageName) {
-        Toast.makeText(c, "Bitmap Loaded " + packageName, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(c, "Bitmap Loaded " + packageName, Toast.LENGTH_SHORT).show();
 
         int index = listTask.indexOf(task);
 

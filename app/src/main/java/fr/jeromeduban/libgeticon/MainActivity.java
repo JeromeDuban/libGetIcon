@@ -44,11 +44,17 @@ public class MainActivity extends Activity {
 
 
 		Parameter param = new Parameter().setCache(true).setSize(100);
+
 		m = new Manager(this, param);
+
+
 
 		m.deleteCache(this); //FIXME : to be removed
 
 		m.download(image1,"com.facebook.katana");
+
+		m.setParameter(param.setSize(50));
+		
 		m.download(image2,"com.netmarble.mherosgb");
 		m.download(image3,"com.netmarble.mherosgb");
 		m.download(image4,"com.facebook.katana");
