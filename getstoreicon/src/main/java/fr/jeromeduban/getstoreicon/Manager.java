@@ -2,9 +2,7 @@ package fr.jeromeduban.getstoreicon;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,7 +10,8 @@ import java.util.ArrayList;
 /**
  * Created by jduban on 02/05/15.
  */
-public class Manager implements OnBitmapLoaded{
+
+public class Manager extends OnBitmapLoaded{
 
     private Context c;
     private ArrayList<LoadImage> listTask;
@@ -20,6 +19,10 @@ public class Manager implements OnBitmapLoaded{
     private ArrayList<ImageView> listImage;
     private Parameter param;
 
+    /**
+     * Creates a new manager to download icons from Play Store thanks to the application's package
+     * @param context Current environnement
+     */
     public Manager(Context context){
         this.c = context;
         listTask = new ArrayList<>();
@@ -27,6 +30,11 @@ public class Manager implements OnBitmapLoaded{
         listPackage = new ArrayList<>();
     }
 
+    /**
+     * Creates a new manager to download icons from Play Store thanks to the application's package
+     * @param context Current environnement
+     * @param param Download parameters
+     */
     public Manager(Context context, Parameter param){
         this.c = context;
         this.param = param;
@@ -35,8 +43,12 @@ public class Manager implements OnBitmapLoaded{
         listPackage = new ArrayList<>();
     }
 
+    /**
+     * Download the icon for the given package name and set it in the imageView given;
+     * @param image ImageView to fill
+     * @param packageName Application's package
+     */
     public void download(ImageView image, String packageName){
-
         LoadImage l = new LoadImage(c,this,image, new Parameter(param));
         l.execute(packageName);
 
@@ -45,12 +57,16 @@ public class Manager implements OnBitmapLoaded{
         listPackage.add(packageName);
     }
 
+    /**
+     * Gives the following parameters to the Manager
+     * @param param parameters
+     */
     public void setParameter(Parameter param){
         this.param = param;
     }
 
     @Override
-    public void onBitmapLoaded(LoadImage task, Bitmap b, String packageName) {
+    protected void onBitmapLoaded(LoadImage task, Bitmap b, String packageName) {
 //        Toast.makeText(c, "Bitmap Loaded " + packageName, Toast.LENGTH_SHORT).show();
 
 
@@ -77,12 +93,19 @@ public class Manager implements OnBitmapLoaded{
         }
     }
 
+    /**
+     * Cancel all the icon downloads
+     */
     public void cancel(){
         for (LoadImage l : listTask){
             l.cancel(true);
         }
     }
 
+    /**
+     * Delete the icon cache
+     * @param context Current environment
+     */
     public void deleteCache(Context context) {
         try {
             File dir = context.getCacheDir();
@@ -92,7 +115,7 @@ public class Manager implements OnBitmapLoaded{
         } catch (Exception ignored) {}
     }
 
-    public boolean deleteDir(File dir) {
+    private boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
             for (String aChildren : children) {

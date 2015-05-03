@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 /**
  * Created by jduban on 03/05/15.
  */
-public interface OnBitmapLoaded {
+abstract class OnBitmapLoaded {
 
-    void onBitmapLoaded(LoadImage task, Bitmap b, String packageName);
+    protected void onBitmapLoaded(LoadImage task, Bitmap b, String packageName) {
+
+    }
 }

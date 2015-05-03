@@ -1,15 +1,10 @@
 package fr.jeromeduban.libgeticon;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.File;
 
 import fr.jeromeduban.getstoreicon.Manager;
 import fr.jeromeduban.getstoreicon.Parameter;
