@@ -1,5 +1,16 @@
 package fr.jeromeduban.getstoreicon;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.ImageView;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,23 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ImageView;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 
@@ -58,7 +55,7 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 			try {
 				// GET play store HTML
 				DefaultHttpClient client = new DefaultHttpClient();
-				HttpGet httpGet = new HttpGet("https://play.google.com/store/apps/details?id=" + params[0]);
+				HttpGet httpGet = new HttpGet(storeUrl);
 				HttpResponse execute;
 				InputStream content;
 
@@ -83,15 +80,28 @@ public class LoadImage extends AsyncTask<String, Void, Bitmap> {
 				return null;
 			}
 
-			// Parse html to get the image url
-			Document doc = Jsoup.parse(response.toString());
-			Elements elt = doc.getElementsByClass("cover-container");
-			Element img = elt.select("img").first();
-			String url = img.absUrl("src");
+			String start = "<div class=\"cover-container\"> <img class=\"cover-image\" src=\"";
+			String end = "\" alt=\"Cover art\"";
+
+			String url = null;
+
+			Pattern pattern = Pattern.compile(start+"(.*?)"+end);
+			Matcher matcher = pattern.matcher(response.toString());
+			while (matcher.find()) {
+				url = matcher.group(1);
+			}
+
+
+
+//			// Parse html to get the image url
+//			Document doc = Jsoup.parse(response.toString());
+//			Elements elt = doc.getElementsByClass("cover-container");
+//			Element img = elt.select("img").first();
+//			String url = img.absUrl("src");
 
 
 			// Sizee selection
-			if (param != null )
+			if (param != null && url !=null)
 				url = url.replace("w300","w"+Integer.toString(param.getSize()));
 
 

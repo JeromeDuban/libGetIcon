@@ -44,8 +44,8 @@ public class MainActivity extends Activity {
 
 		m = new Manager(this, param);
 
-		//m.deleteCache(this); //FIXME : to be removed
-
+		m.deleteCache(this); //FIXME : to be removed
+//
 		m.download(image1, "com.facebo  &=1ok.%20");
 		m.download(image2,"com.netmarble.mherosg");
 		m.download(image3,"com.netmarble.mherosgb");

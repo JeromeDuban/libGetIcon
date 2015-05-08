@@ -16,10 +16,32 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets{
+        main{
+            java{
+                srcDir 'src/main/java'
+            }
+            resources{
+                srcDir 'src/../libs'
+            }
+        }
+    }
 }
+
+task clearJar(type: Delete) {
+    delete '../getstoreicon.jar'
+}
+
+task makeJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('..')
+    include('classes.jar')
+    rename ('classes.jar', 'Getstoreicon.jar')
+}
+
+makeJar.dependsOn(clearJar, build)
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile files('libs/jsoup-1.8.2.jar')
 }
