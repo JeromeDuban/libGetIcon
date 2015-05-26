@@ -1,14 +1,16 @@
 package fr.jeromeduban.getstoreicon;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by jduban on 02/05/15.
+ * Created by jduban on 02/05/15 .
  */
 
 public class Manager extends OnBitmapLoaded{
@@ -18,6 +20,7 @@ public class Manager extends OnBitmapLoaded{
     private ArrayList<String> listPackage;
     private ArrayList<ImageView> listImage;
     private Parameter param;
+    private boolean internetPermission = false;
 
     /**
      * Creates a new manager to download icons from Play Store thanks to the application's package
@@ -28,6 +31,11 @@ public class Manager extends OnBitmapLoaded{
         listTask = new ArrayList<>();
         listImage = new ArrayList<>();
         listPackage = new ArrayList<>();
+
+        if(!checkInternetPermission())
+            Toast.makeText(context,"Please add Internet permission",Toast.LENGTH_SHORT).show();
+        else
+            internetPermission = true;
     }
 
     /**
@@ -41,6 +49,11 @@ public class Manager extends OnBitmapLoaded{
         listTask = new ArrayList<>();
         listImage = new ArrayList<>();
         listPackage = new ArrayList<>();
+
+        if(!checkInternetPermission())
+            Toast.makeText(context,"Please add Internet permission",Toast.LENGTH_SHORT).show();
+        else
+            internetPermission = true;
     }
 
     /**
@@ -126,6 +139,12 @@ public class Manager extends OnBitmapLoaded{
             }
         }
         return dir.delete();
+    }
+
+    private boolean checkInternetPermission(){
+        String permission = "android.permission.INTERNET";
+        int res = c.checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 
 }
