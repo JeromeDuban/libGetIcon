@@ -34,7 +34,7 @@ task clearJar(type: Delete) {
 
 task makeJar(type: Copy) {
     from('build/intermediates/bundles/release/')
-    into('..')
+    into('../libs/')
     include('classes.jar')
     rename ('classes.jar', 'Getstoreicon.jar')
 }
