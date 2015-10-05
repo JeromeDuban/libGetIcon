@@ -51,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
 
             TextView expectedResult = (TextView) card.findViewById(R.id.result);
             expectedResult.setText(result[i]);
-            if (result[i].equals("error")) expectedResult.setTextColor(Color.RED);
+            if (result[i].equals("Error")) expectedResult.setTextColor(Color.RED);
             else expectedResult.setTextColor(Color.GREEN);
 
             ImageView iv = (ImageView) card.findViewById(R.id.icon);
