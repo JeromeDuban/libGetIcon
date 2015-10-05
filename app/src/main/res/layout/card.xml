@@ -1,0 +1,60 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
+    android:layout_marginBottom="10dp"
+    card_view:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Thumbnail"/>
+
+        <TextView
+            android:id="@+id/packageName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/icon"
+            android:layout_toEndOf="@+id/icon"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            android:text="File Name" />
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/icon"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_below="@+id/packageName"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:text="Expected: " />
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/desc"
+            android:layout_toEndOf="@+id/desc"
+            android:layout_below="@+id/packageName"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:text="Correct" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
