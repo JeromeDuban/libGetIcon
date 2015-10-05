@@ -40,7 +40,7 @@ Then select download an icon  in an imageView
 
 The result of the following code is this one:
 
-<img src="/screenshots/screen1.png" width="200px">
+<img src="/screenshots/screen.png" width="200px">
 
 You can also empty the cach with the following code
 
